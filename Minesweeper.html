@@ -1,0 +1,568 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Minesweeper</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	opacity: 0.5;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, KaiTi, STKaiTi, '华文楷体', KaiTi_GB2312, '楷体_GB2312', serif; }
+.mono { font-family: Nitti, 'Microsoft YaHei', '微软雅黑', monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, KaiTi, STKaiTi, '华文楷体', KaiTi_GB2312, '楷体_GB2312', serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, Nitti, 'Microsoft YaHei', '微软雅黑', monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="669c4f34-f79c-4aa2-a503-d4756b0dd842" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">💣</span></div><h1 class="page-title">Minesweeper</h1></header><div class="page-body"><p id="bfbfef43-31d9-4ee4-8ae6-a6fc7e5a28c5" class="">This program belongs to Ho Hin Cheung.</p><h2 id="84574153-6571-4070-9440-3ec76bbddbff" class="">Introduction</h2><p id="24c7e87d-20c7-4be4-8583-ea1dca5f817a" class="">Minesweeper is a classic game. Here, I try to write the minesweeper game by using Pascal as my programming language and lazarus as my source editor.</p><h2 id="1c4a49d3-368f-4345-b35a-67c310655afd" class="">Details</h2><p id="b4c9493e-24b2-4639-baf5-24be439d1168" class="">I will show you how to use my program here</p><h2 id="d987348a-6fed-483c-987c-6547d4d7178d" class="">Main Features</h2><ul id="c6fad6e2-6162-4971-9d54-622e031c2800" class="bulleted-list"><li>First safe click Guranteed<p id="00c1a355-ec3b-4ba7-9d78-7c75159b92e1" class=""> The game field is generated after the first click of the player !</p></li></ul><ul id="3821b1de-f747-4a9f-9006-7b37f7f88f33" class="bulleted-list"><li>Two control Methods<p id="b8bb13d5-6160-4c82-aff1-63752bac2184" class="">Players can use mouse or keyboard to play the game (but not menu screen)</p></li></ul><ul id="1b7eb93a-4a42-4105-a1e9-89140eedf9c1" class="bulleted-list"><li>Auto settings<p id="93151a2a-9759-4216-9ef7-09d5378f69ad" class="">The screen buffer size and the size of the console will be adjusted by the code in my program.</p></li></ul><ul id="56134974-459c-4df7-829b-d0f35077f802" class="bulleted-list"><li>Well Designed interface<p id="21a6fdcd-b3cb-46cf-937d-1d4c311f15a5" class=""> In both control methods, the hightlighting of the selected block is enabled</p></li></ul><ul id="6d6afe13-d665-4b84-8498-9754786fb1d8" class="bulleted-list"><li>Nice algorithms<p id="1644d6ef-b0ec-43a8-9e57-b3ffaf8463ab" class="">the movements and selecting of grids are designed and can cater lot of special cases</p><p id="eeaddc9a-23f1-4de5-836a-ad38343ae8e3" class="">(  Definitely Not perfect! That is why we always need to improve game designs！ )</p></li></ul><ul id="8468050d-2b0f-4fcb-af31-f9749f302088" class="bulleted-list"><li>Save and load saved game<p id="3b5343a5-8c8f-4a39-8d44-d7e45c390518" class="">this program allows you to save your gameboard and play next time</p></li></ul><ul id="19ccb1a1-7dbc-469c-ab55-8567d9bc85ae" class="bulleted-list"><li>Save statistics<p id="cbf035fe-e51f-457e-9f9a-05fb36134d05" class="">This program stores the wins and loses when you are playing the game</p></li></ul><ul id="971308d2-761f-4dca-bb63-8cc60bf56daf" class="bulleted-list"><li>Different difficulties<p id="6fda0eba-0e96-46d8-a911-2be3ca545776" class="">Three difficulties ( easy, normal, hard ) can be choosed</p></li></ul><h2 id="c7fe34ed-4df2-4441-ba23-0c3887faacaf" class="">Kind Reminders when playing the game</h2><ul id="44a2309a-1bf5-4689-bacd-ce3d68f407a4" class="bulleted-list"><li>Avoid fast mouse movement<p id="68184f6d-5218-4307-9b33-4480b208359c" class="">As the speed of detection of mouse position and mouse click is slow, some unwanted problems (may affect appearance but not the game algorithms) may appear when moving your mouse too fast. This problem cannot be solved by code.</p></li></ul><ul id="9e00d0fd-75f6-43dc-a184-eff9d4570dfc" class="bulleted-list"><li>Close the game by using the quit function on the menu<p id="2ec5b23a-eb32-4319-abe7-be2599a0a1a0" class="">the saving of statistics is done before closing</p></li></ul><ul id="2190237e-c547-4fa1-8ce1-03e3ed038fc4" class="bulleted-list"><li>DO NOT DELETE GAME FILES<p id="1dbfb6a3-58d5-422e-a317-8c7eab848f7a" class="">The &quot;savedboard.txt&quot; and &quot;stats.txt&quot; are needed every time the program is opened. Editing or deleting the file will cause errors !</p></li></ul><ul id="29e864cb-5749-4797-becf-2c17e6cee79b" class="bulleted-list"><li>Never change the settings of the game console yourself<p id="b050f4b3-d976-4b3b-9ae8-9d9558d9d80b" class="">The screen buffer size and the size of the console will be adjusted by the code in my program. If you change these settings on your own, terrible things will appear ! </p></li></ul><h3 id="7a7a153a-b668-4ed5-9ef3-8c56ecac94d6" class="">Starting Screen</h3><p id="abc24aef-3ecd-4056-8434-12e32ebe33b5" class="">This screen is controlled by the up and down arrow keys. Press enter to confirm your choice</p><figure id="338e8b3f-ffcb-400b-b2eb-45ae9d441809" class="image"><a href="Minesweeper/Untitled.png"><img style="width:637px" src="Minesweeper/Untitled.png"/></a></figure><ul id="fbb5f25a-d992-4d83-b2fd-f12260ad9ab9" class="bulleted-list"><li>start game - this will starts the game</li></ul><ul id="d30da176-dab1-46b2-8d5b-9c55ffc1ffb1" class="bulleted-list"><li>load saved game - this will load the &quot;savedboard.txt&quot; from the directory where your .exe file is placed</li></ul><ul id="5cc21fd6-282a-4b57-bfaa-81191067b3c7" class="bulleted-list"><li>statistics - this will let you see your wins, loses and total games</li></ul><ul id="409ef1b5-56ca-418b-9cf6-e1b8be2e2de6" class="bulleted-list"><li>Quit - Quit the game</li></ul><h3 id="b7e93c7f-dcfa-4ea2-ac73-ef20aa68cc79" class="">Choose Difficulty (after start game)(won&#x27;t show up if load saved game)</h3><p id="0fbf740c-a2e2-435c-ac72-18f265cf06f7" class="">This screen is controlled by the up and down arrow keys. Press enter to confirm your choice</p><figure id="ccb7cf65-fd95-45b6-8b75-163b68c37e8c" class="image"><a href="Minesweeper/Untitled%201.png"><img style="width:631px" src="Minesweeper/Untitled%201.png"/></a></figure><p id="d6061a81-d245-4cdf-a5a7-b12baa5a93ec" class="">There are 3 difficulties for players to choose</p><ul id="4050cce4-c498-4a43-99d3-b1a9034ae7f0" class="bulleted-list"><li>Easy - 10x10 grid , 10 mines</li></ul><ul id="804cadac-ff31-4254-9e4f-0e1de6c9355b" class="bulleted-list"><li>Normal - 18x14 grid, 40 mines</li></ul><ul id="91efa65e-409f-4281-a33e-93a68b44a47b" class="bulleted-list"><li>Hard - 22x18 grid , 99 mines</li></ul><h3 id="05cd8182-46ac-4afd-a4cb-965293d01bbb" class="">Choose Control method (After choose difficulty or after load saved game)</h3><p id="a9e2ba36-65da-4169-8496-b74e846a5824" class="">This screen is controlled by the up and down arrow keys. Press enter to confirm your choice</p><figure id="d07b6c76-d2cb-4970-ab00-7610fdc30b0d" class="image"><a href="Minesweeper/Untitled%202.png"><img style="width:639px" src="Minesweeper/Untitled%202.png"/></a></figure><ul id="9c99aae4-0675-4b47-84e6-58e37fdc4a70" class="bulleted-list"><li>Mouse - the game will be controlled by moving the mouse and clicking the mouse buttons</li></ul><ul id="197cbce1-dcdc-4cae-8519-6fc1bbe97674" class="bulleted-list"><li>Keyboard - the game will be controlled by pressing differect keyboard keys</li></ul><h3 id="392fcf93-7a79-46cc-9537-ff04739e872e" class="">Mouse Control </h3><p id="193fb662-b0ef-4f93-896e-7930f0431edb" class="">Move mouse to select. Left mouse button to open the grid or to click on the quit and save button. Right mouse button mark the grid as mine.</p><figure id="86d743c1-a5ae-4833-87e8-02caf30d1a3d" class="image"><a href="Minesweeper/Untitled%203.png"><img style="width:1333px" src="Minesweeper/Untitled%203.png"/></a><figcaption>Example of a game with easy difficulty and the mouse hovering coloring</figcaption></figure><figure id="a1a26f0a-536d-45f4-9b82-597d68f413b7" class="image"><a href="Minesweeper/Untitled%204.png"><img style="width:373px" src="Minesweeper/Untitled%204.png"/></a><figcaption><strong>The appearance of a marked mine</strong></figcaption></figure><p id="561f6ef3-f486-4a71-8246-bcf0081e9171" class=""><strong>Features</strong></p><ul id="9416d2b7-23eb-4142-9ed2-c0b297e97bb5" class="bulleted-list"><li>Coloring - when your mouse moves on an unopened block, the block will be colored</li></ul><ul id="741c4a7a-a644-4755-9f7e-a821987b947f" class="bulleted-list"><li>Mines Left - Number of mines waiting for u to mark (will decrease whenever u mark a bomb)</li></ul><ul id="a2cec80b-0c9d-4fa7-9013-4c982868c8c0" class="bulleted-list"><li>Quit - the blue button on left hand corner, quit to menu screen</li></ul><ul id="c0b47cc2-742f-4c28-b80b-db55d787e7e3" class="bulleted-list"><li>Save- Save your current game progress to &quot;savedboard.txt&quot;</li></ul><ul id="52d3fc88-06ec-4ca1-bd18-5b3433a50bd2" class="bulleted-list"><li>Avoid Misclick - when u mark a grid as mine, it cannot be opened to avoid misclicking</li></ul><ul id="c134c584-daa1-43a8-9f2d-d1e8b73b13c4" class="bulleted-list"><li>Opening of Grids - the opening of grids are checked by recursion </li></ul><ul id="e7b85529-9727-4958-bdbc-5c8ae31e9500" class="bulleted-list"><li>Avoid Misclick - when u mark a grid as mine, it cannot be opened to avoid misclicking</li></ul><ul id="110a0e00-c248-42d3-9ae7-a7cb7c75c21a" class="bulleted-list"><li>Opening of Grids - the opening of grids are checked by recursion </li></ul><p id="0210ce30-1418-416e-96a4-90465df14eb8" class=""><strong>Cautions:</strong></p><ul id="3ce4094a-834c-489e-a276-ffa644ddcdfa" class="bulleted-list"><li>Avoid fast mouse movement<p id="b328376f-e58d-454b-9b9a-9813815771c8" class="">As the speed of detection of mouse position and mouse click is slow, some unwanted problems (may affect appearance but not the game algorithms) may appear when moving your mouse too fast. This problem cannot be solved by code.</p></li></ul><h3 id="92a3a18f-b31d-4b0b-8643-e63c4bca13e1" class="">Keyboard Control</h3><p id="5307c2df-f116-4730-86b6-d690dceef109" class="">arrow keys to move. q to quit game. s to save game. t to toggle between mines and empty grids and z , x to move to the previous or next mine or empty grid</p><p id="a16d8b95-419b-4733-8574-d0237ca80801" class="">
+</p><figure id="161c9cf6-d654-4816-8405-03aaea828012" class="image"><a href="Minesweeper/Untitled%205.png"><img style="width:1333px" src="Minesweeper/Untitled%205.png"/></a><figcaption>example of a test game with easy difficulty</figcaption></figure><p id="8bc6e062-88ca-494f-ada7-b3c593bef613" class=""><strong>Features</strong></p><ul id="06c3320b-ec7a-4488-91e7-ed0687e22f29" class="bulleted-list"><li>Coloring - the purple indicates which grid you are on</li></ul><ul id="6981f8b0-b61f-446c-84f4-25c01ac0b768" class="bulleted-list"><li>ToggleMine ( default as false, can be changed by pressing t ) <p id="8a598849-2685-4699-a76d-11e74511af90" class="">when true, the z and x keyboard keys will only go to the previous or next marked mines</p><p id="a7a0d459-b489-4e2d-9156-338819c159ac" class="">when false, the z and x keyboard keys will only go to the previous or next empty grids</p><p id="8f0e06bc-c3df-42be-a9b2-40d9e717c89c" class="">z is for previous, x is for next</p></li></ul><ul id="402a02bd-304b-4af8-a5d4-7a37b5dd79ef" class="bulleted-list"><li>Save game - press s to save game to &quot;savedboard.txt&quot;</li></ul><ul id="4af93294-2421-44b1-9d7e-60b0d05a74d0" class="bulleted-list"><li>Quit - quit to menu</li></ul><ul id="b2360d9a-262a-4b34-895b-432972796de0" class="bulleted-list"><li>Avoid Misclick - when u mark a grid as mine, it cannot be opened to avoid misclicking</li></ul><ul id="f7db1742-4c9a-4d5b-bea3-d632c2dd733c" class="bulleted-list"><li>Opening of Grids - the opening of grids are checked by recursion </li></ul><ul id="49d0bb5d-30ce-456a-ab2f-95216b8810f7" class="bulleted-list"><li>User friendly control methods<p id="665411e9-5450-45ca-ad4d-4f81f05489fb" class="">Take pressing the up arrow key as an example</p><p id="e5b05f01-ba06-4c98-9307-1b71f8982d40" class="">The movements are showned when your cursor is in different position</p><p id="375dac54-ff2d-41b5-b947-46c7cf2cd7ef" class="">( look at the photo captions! )</p><p id="ba7e55cd-2b9e-442f-b08a-9e69fcafc707" class=""><strong>Looping (the cursor may go to the bottom when up arrow is pressed)</strong></p><figure id="b5df1178-a641-4700-8af6-1cabdcaa78d1" class="image"><a href="Minesweeper/Untitled%206.png"><img style="width:425px" src="Minesweeper/Untitled%206.png"/></a><figcaption>if it is at the top , it will go to the bottom</figcaption></figure><p id="9230d905-6ba5-4970-b9ab-0a3cf44d6732" class=""><strong>Normal movement (moves up a grid)</strong></p><figure id="d48a5f54-cf3c-47c9-98e0-652f4c72a446" class="image"><a href="Minesweeper/Untitled%207.png"><img style="width:369px" src="Minesweeper/Untitled%207.png"/></a><figcaption>goes up a grid</figcaption></figure><p id="f81b97ec-0fc2-483a-8576-6227e851a2a6" class=""><strong>Skipping the opened grids </strong></p><figure id="6502b9b0-0eb3-4acf-8ac7-fb87048df688" class="image"><a href="Minesweeper/Untitled%208.png"><img style="width:399px" src="Minesweeper/Untitled%208.png"/></a><figcaption>skips the opened grids</figcaption></figure><p id="894fdf54-6ee7-483a-93ba-4a5689ae9d7c" class=""><strong>Auto find empty grids when a grid is opened</strong></p><p id="2253fc5d-6df4-4285-988e-615b1b7338b0" class="">after u pressed enter on the current grid, the cursor will automatically jump to the nearest empty grid by looping following preferably the order of x-axis, then y-axis</p><figure id="432cb6c5-70d8-4b91-931e-84b5b807f341" class="image"><a href="Minesweeper/Untitled%209.png"><img style="width:471px" src="Minesweeper/Untitled%209.png"/></a></figure><figure id="bba2ea1e-346f-4e0d-bfd0-d678a9ac9081" class="image"><a href="Minesweeper/Untitled%2010.png"><img style="width:471px" src="Minesweeper/Untitled%2010.png"/></a></figure><p id="a81fd9b4-dd4a-4be2-ae59-2806c3b5cd8e" class=""><strong>Toggling between marked mines and empty grids</strong></p><p id="d8da88a6-e93f-4ab0-8b4b-443a84cce00a" class="">(y is used as a variable to represent a marked<strong> </strong>mine or empty grid)</p><p id="0f4d4df6-b14d-4bce-9124-3703e4b9bcf8" class="">when z is pressed, the cursor will go to previous y</p><p id="625dbee5-b0c8-44f7-afbc-eeab1e612e3a" class="">when x is pressed, the cursor will go to next y</p><p id="af13cce8-90ce-48a8-bcb1-d9020c98e9da" class="">when t is pressed,   the value of y will be changed </p><p id="723abe7c-ef97-428b-a8dd-e6ec05dff1d4" class="">(  marked<strong> </strong>mine → empty grid or empty grid→ marked<strong> </strong>mine )</p><p id="91e556d4-4124-4eee-a030-89f36008ae79" class="">
+</p></li></ul><p id="f5515180-4ce8-4389-baca-e8658ac5c9e2" class="">       Take pressing z (go to previous) as an example </p><p id="cd184d4d-96a5-42aa-a941-a29796c14fc8" class="">      (the arrow indicates where the cursor will go)</p><p id="940d92b3-a98d-4a2f-83d3-4d96fbc51cc2" class=""><strong>       when the value of y is empty grid</strong></p><figure id="b85d17ca-edd8-410b-8825-eb561b4fa8db" class="image"><a href="Minesweeper/Untitled%2011.png"><img style="width:399px" src="Minesweeper/Untitled%2011.png"/></a></figure><p id="eac313a2-c627-4050-bd98-7c4083467757" class=""><strong>when the value of y is mine</strong></p><figure id="78cedbee-8c21-496a-bec5-334edf022a59" class="image"><a href="Minesweeper/Untitled%2012.png"><img style="width:399px" src="Minesweeper/Untitled%2012.png"/></a></figure><h3 id="a504008e-8e89-4633-92b0-d48dd5643e93" class="">Save game</h3><p id="7bd9db52-e271-41c9-a082-bd665b7f2341" class="">Triggered when pressing the save button in mouse control mode or pressing s in keyboard control mode. <strong>The game won&#x27;t be saved if the grid is empty! The game field is generated after the first click of the player!</strong></p><h3 id="f1e211af-50d2-4799-a507-da23de5edc9a" class="">Statistics</h3><p id="dc952a72-acb3-48f5-a8af-0eba4a82e492" class="">Show the statistics of the game</p><figure id="68a4545c-c9c5-48ec-8f49-c33a25ff330e" class="image"><a href="Minesweeper/Untitled%2013.png"><img style="width:643px" src="Minesweeper/Untitled%2013.png"/></a></figure><p id="df7ebbcb-e588-4c6b-943f-43a7d2f36019" class=""><strong>Features</strong></p><ul id="b95165fb-8c78-4434-9384-4a32402a67e5" class="bulleted-list"><li>Toggle difficulty -  toggle your results with different difficulty ( easy, normal and hard )</li></ul><ul id="adc9c462-e0ca-4866-9512-c2daecb58cfb" class="bulleted-list"><li>Quit - quit to main menu</li></ul><ul id="145dca8d-76be-4a3e-9d5e-560bb8fd5be7" class="bulleted-list"><li>Clear - clear all the statistics</li></ul><h3 id="eb8881fb-7a42-4750-81ea-45483735dc83" class="">Quit</h3><p id="8d9e9ebf-c3dd-42b6-924b-3d4121946c46" class="">Closes the exe and save the statistics to &quot;stats.txt&quot;</p><p id="139d5228-dc50-4bcb-a16f-c75756fb3b32" class="">
+</p></div></article></body></html>
